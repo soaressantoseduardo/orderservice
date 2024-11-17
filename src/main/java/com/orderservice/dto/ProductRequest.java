@@ -1,12 +1,22 @@
 package com.orderservice.dto;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+
 /**
  * Classe de requisição para um produto em um pedido.
  * Esta classe contém informações sobre um produto, incluindo seu nome e preço,
  * e é utilizada na criação de um pedido.
+ * 
+ * Autor: Eduardo Soares Santos
+ * Email: soaressantoseduardo@gmail.com
  */
 public class ProductRequest {
+    
+    @NotBlank(message = "O nome do produto não pode estar vazio.")
     private String name;
+
+    @DecimalMin(value = "0.0", inclusive = false, message = "O preço do produto deve ser maior que zero.")
     private Double price;
 
     /**

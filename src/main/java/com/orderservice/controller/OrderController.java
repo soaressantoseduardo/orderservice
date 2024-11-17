@@ -3,6 +3,7 @@ package com.orderservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,14 +15,20 @@ import com.orderservice.dto.OrderRequest;
 import com.orderservice.dto.OrderResponse;
 import com.orderservice.service.OrderService;
 
+import javax.validation.Valid;
+
 /**
  * Controlador REST para gerenciar pedidos.
  * Este controlador expõe os endpoints que permitem a criação e consulta
  * de pedidos. Utiliza o OrderService para processar a lógica relacionada
  * aos pedidos.
+ * 
+ * Autor: Eduardo Soares Santos
+ * Email: soaressantoseduardo@gmail.com
  */
 @RestController
 @RequestMapping("/orders")
+@Validated // Habilita a validação para as requisições
 public class OrderController {
 
     @Autowired
@@ -34,7 +41,7 @@ public class OrderController {
      * @return A resposta do pedido criado contendo o ID e o valor total do pedido.
      */
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         OrderResponse response = orderService.createOrder(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

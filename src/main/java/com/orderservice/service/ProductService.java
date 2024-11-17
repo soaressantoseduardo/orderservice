@@ -14,6 +14,9 @@ import java.util.List;
  * Serviço para gerenciamento de produtos.
  * Esta classe contém a lógica de negócios relacionada aos produtos, incluindo
  * a criação, recuperação e listagem dos produtos disponíveis.
+ * 
+ * Autor: Eduardo Soares Santos
+ * Email: soaressantoseduardo@gmail.com 
  */
 @Service
 public class ProductService {
