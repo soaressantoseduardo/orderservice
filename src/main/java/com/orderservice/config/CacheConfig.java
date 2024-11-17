@@ -1,7 +1,14 @@
 package com.orderservice.config;
 
+import java.time.Duration;
+
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 /**
  * Classe de configuração de cache para a aplicação.
@@ -15,5 +22,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-    // Configurações adicionais para cache podem ser adicionadas aqui se necessário.
+	 @Bean
+	    public CacheManager cacheManager(RedisConnectionFactory factory) {
+	        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+	                .entryTtl(Duration.ofMinutes(10)); // Tempo de expiração de 10 minutos
+
+	        return RedisCacheManager.builder(factory)
+	                .cacheDefaults(config)
+	                .build();
+	    }
 }

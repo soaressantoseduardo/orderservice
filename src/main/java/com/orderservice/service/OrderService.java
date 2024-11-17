@@ -1,6 +1,8 @@
 package com.orderservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.orderservice.dto.OrderRequest;
@@ -42,6 +44,7 @@ public class OrderService {
      * @return A resposta do pedido criado contendo o ID, valor total e status.
      * @throws DuplicatedOrderException Se um pedido duplicado for detectado.
      */
+    @CacheEvict(value = "orders", allEntries = true)
     public OrderResponse createOrder(OrderRequest orderRequest) throws DuplicatedOrderException {
         List<Product> products = new ArrayList<>();
         Double totalValue = 0.0;
@@ -69,12 +72,13 @@ public class OrderService {
     }
 
     /**
-     * Obtém os detalhes de um pedido pelo ID.
+     * Obtém os detalhes de um pedido pelo ID, utilizando cache.
      *
      * @param id O ID do pedido a ser buscado.
      * @return A resposta do pedido contendo detalhes como ID, valor total e status.
      * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
+    @Cacheable(value = "orders", key = "#id")
     public OrderResponse getOrderById(Long id) {
         return orderRepository.findById(id)
                 .map(order -> new OrderResponse(order.getId(), order.getTotalValue(), order.getStatus()))
@@ -82,10 +86,11 @@ public class OrderService {
     }
 
     /**
-     * Obtém todos os pedidos.
+     * Obtém todos os pedidos com cache.
      *
      * @return Uma lista de respostas de pedidos.
      */
+    @Cacheable(value = "orders")
     public List<OrderResponse> getAllOrders() {
         return orderRepository.findAll().stream()
                 .map(order -> new OrderResponse(order.getId(), order.getTotalValue(), order.getStatus()))
