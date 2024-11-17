@@ -19,12 +19,8 @@ import java.util.stream.Collectors;
 
 /**
  * Serviço para gerenciamento de pedidos.
- * 
  * Esta classe contém a lógica de negócios relacionada a pedidos, incluindo
- * a criação e a recuperação de detalhes sobre pedidos específicos.
- * 
- * Autor: Eduardo Soares Santos
- * Email: soaressantoseduardo@gmail.com
+ * a criação e a recuperação de informações sobre pedidos específicos.
  */
 @Service
 public class OrderService {
@@ -36,17 +32,18 @@ public class OrderService {
     private ProductRepository productRepository;
 
     /**
-     * Cria um novo pedido baseado na solicitação recebida.
+     * Cria um novo pedido a partir da solicitação recebida.
      *
-     * @param orderRequest objeto que contém os detalhes dos produtos do pedido
-     * @return a resposta do pedido criado contendo o ID, valor total e status
+     * @param orderRequest Objeto que contém os detalhes dos produtos do pedido.
+     * @return A resposta do pedido criado contendo o ID, valor total e status.
      */
     public OrderResponse createOrder(OrderRequest orderRequest) {
         Order order = new Order();
-        order.setStatus(Constants.STATUS_PENDING); // Usando constante
+        order.setStatus(Constants.STATUS_PENDING); // Define o status inicial como PENDENTE
         List<Product> products = new ArrayList<>();
         Double totalValue = 0.0;
 
+        // Percorre cada produto na requisição e adiciona ao pedido
         for (ProductRequest productRequest : orderRequest.getProducts()) {
             Product product = new Product();
             product.setName(productRequest.getName());
@@ -66,9 +63,9 @@ public class OrderService {
     /**
      * Obtém os detalhes de um pedido pelo ID.
      *
-     * @param id o ID do pedido a ser buscado
-     * @return a resposta do pedido contendo detalhes como ID, valor total e status
-     * @throws EntityNotFoundException se o pedido não for encontrado
+     * @param id O ID do pedido a ser buscado.
+     * @return A resposta do pedido contendo detalhes como ID, valor total e status.
+     * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
     public OrderResponse getOrderById(Long id) {
         return orderRepository.findById(id)
@@ -79,7 +76,7 @@ public class OrderService {
     /**
      * Obtém todos os pedidos.
      *
-     * @return uma lista de respostas de pedidos
+     * @return Uma lista de respostas de pedidos.
      */
     public List<OrderResponse> getAllOrders() {
         return orderRepository.findAll().stream()

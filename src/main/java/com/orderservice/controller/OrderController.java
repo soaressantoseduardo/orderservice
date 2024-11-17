@@ -16,13 +16,9 @@ import com.orderservice.service.OrderService;
 
 /**
  * Controlador REST para gerenciar pedidos.
- * 
  * Este controlador expõe os endpoints que permitem a criação e consulta
  * de pedidos. Utiliza o OrderService para processar a lógica relacionada
  * aos pedidos.
- * 
- * Autor: Eduardo Soares Santos
- * Email: soaressantoseduardo@gmail.com
  */
 @RestController
 @RequestMapping("/orders")
@@ -34,8 +30,8 @@ public class OrderController {
     /**
      * Cria um novo pedido com os produtos fornecidos.
      *
-     * @param orderRequest objeto que contém os detalhes do pedido
-     * @return a resposta do pedido criado contendo o ID e o valor total do pedido
+     * @param orderRequest Objeto que contém os detalhes do pedido, incluindo os produtos.
+     * @return A resposta do pedido criado contendo o ID e o valor total do pedido.
      */
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
@@ -44,10 +40,11 @@ public class OrderController {
     }
 
     /**
-     * Obtém os detalhes de um pedido específico.
+     * Obtém os detalhes de um pedido específico pelo ID.
      *
-     * @param id o ID do pedido a ser buscado
-     * @return detalhes do pedido encontrado
+     * @param id O ID do pedido a ser buscado.
+     * @return Detalhes do pedido encontrado.
+     * @throws EntityNotFoundException Se o pedido não for encontrado.
      */
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable Long id) {
