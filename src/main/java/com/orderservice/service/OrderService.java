@@ -3,6 +3,9 @@ package com.orderservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.orderservice.dto.OrderRequest;
@@ -95,5 +98,17 @@ public class OrderService {
         return orderRepository.findAll().stream()
                 .map(order -> new OrderResponse(order.getId(), order.getTotalValue(), order.getStatus()))
                 .collect(Collectors.toList());
+    }
+    
+    /**
+     * Obtém todos os pedidos com suporte à paginação.
+     *
+     * @param page Número da página a ser recuperada.
+     * @param size Tamanho da página (número de resultados por página).
+     * @return Uma lista paginada de respostas de pedidos.
+     */
+    public Page<OrderResponse> getAllOrders(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return orderRepository.findAll(pageable).map(order -> new OrderResponse(order.getId(), order.getTotalValue(), order.getStatus()));
     }
 }

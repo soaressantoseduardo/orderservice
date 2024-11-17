@@ -1,6 +1,7 @@
 package com.orderservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.orderservice.dto.OrderRequest;
@@ -56,6 +58,21 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable Long id) {
         OrderResponse response = orderService.getOrderById(id);
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * Obtém todos os pedidos com suporte a paginação.
+     *
+     * @param page Número da página a ser recuperada.
+     * @param size Tamanho da página (número de resultados por página).
+     * @return Uma lista paginada de pedidos.
+     */
+    @GetMapping
+    public ResponseEntity<Page<OrderResponse>> getAllOrders(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        Page<OrderResponse> response = orderService.getAllOrders(page, size);
         return ResponseEntity.ok(response);
     }
 }
