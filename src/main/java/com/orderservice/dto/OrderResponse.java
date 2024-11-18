@@ -1,5 +1,7 @@
 package com.orderservice.dto;
 
+import java.io.Serializable;
+
 /**
  * Classe de resposta para um pedido.
  * 
@@ -9,8 +11,9 @@ package com.orderservice.dto;
  * Autor: Eduardo Soares Santos
  * Email: soaressantoseduardo@gmail.com
  */
-public class OrderResponse {
-    private Long id;
+public class OrderResponse  implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private Long id;
     private Double totalValue;
     private String status;
 

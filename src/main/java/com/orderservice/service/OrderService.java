@@ -48,29 +48,37 @@ public class OrderService {
      * @throws DuplicatedOrderException Se um pedido duplicado for detectado.
      */
     @CacheEvict(value = "orders", allEntries = true)
-    public OrderResponse createOrder(OrderRequest orderRequest) throws DuplicatedOrderException {
+    public OrderResponse createOrder(OrderRequest orderRequest) {
         List<Product> products = new ArrayList<>();
         Double totalValue = 0.0;
 
         for (ProductRequest productRequest : orderRequest.getProducts()) {
-            Product product = new Product();
-            product.setName(productRequest.getName());
-            product.setPrice(productRequest.getPrice());
-            products.add(product);
-            totalValue += product.getPrice();
+            totalValue += productRequest.getPrice();
         }
 
-        // Verifica se um pedido com o mesmo valor total e produtos existentes já existe
+        // Verifica duplicado assumindo que produtos já existem no banco
         if (orderRepository.existsByTotalValueAndProductsIn(totalValue, products)) {
             throw new DuplicatedOrderException("Um pedido equivalente já existe.");
         }
 
         Order order = new Order();
-        order.setProducts(products);
+        order.setStatus("PENDING");
         order.setTotalValue(totalValue);
-        order.setStatus(Constants.STATUS_PENDING);
 
+        // Associar produtos salvando-os na transação
+        for (ProductRequest productRequest : orderRequest.getProducts()) {
+            Product product = new Product();
+            product.setName(productRequest.getName());
+            product.setPrice(productRequest.getPrice());
+            product.setOrder(order); // Realiza a associação aqui
+
+            products.add(product);
+        }
+
+        // Finalmente, salvar todo o pedido e seus produtos atrelados
+        order.setProducts(products);
         orderRepository.save(order);
+
         return new OrderResponse(order.getId(), order.getTotalValue(), order.getStatus());
     }
 
