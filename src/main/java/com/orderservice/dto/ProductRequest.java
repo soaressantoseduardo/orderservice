@@ -18,8 +18,18 @@ public class ProductRequest {
 
     @DecimalMin(value = "0.0", inclusive = false, message = "O preço do produto deve ser maior que zero.")
     private Double price;
+    
+    // Construtor padrão necessário para a deserialização
+    public ProductRequest() {
+    }
 
-    /**
+    // Construtor customizado
+    public ProductRequest(String name, Double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+	/**
      * Obtém o nome do produto.
      *
      * @return O nome do produto.
